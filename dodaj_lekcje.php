@@ -84,71 +84,53 @@ session_start();
 						</form>
 						
 					
-					<?php
-		
-				$connection = mysqli_connect('mysql.cba.pl', '', '');
-				if (!$connection){
-					die("Polaczenie przerwanie" . mysqli_error($connection));
-				}
-				$select_db = mysqli_select_db($connection, '');
-				if (!$select_db){
-					die("Blad polaczenia" . mysqli_error($connection));
-				}
-				
-				
+	<?php
 
-				if (isset($_POST['dodaj_kurs']))
-				{
-					$temat = $_POST['temat'];
-					$tresc = $_POST['tresc'];
-					$sposob = $_POST['sposob'];
+		require_once "laczenie.php";
 	
-				$sql = "SELECT temat FROM kursy WHERE temat='$temat'";
-				$result = mysqli_query($connection,$sql);
+		
+		if (isset($_POST['dodaj_kurs']))
+		{
+			$temat = $_POST['temat'];
+			$tresc = $_POST['tresc'];
+			$sposob = $_POST['sposob'];
 
-				if(mysqli_num_rows($result) == 0)
-				{
+		$sql = "SELECT temat FROM kursy WHERE temat='$temat'";
+		$result = mysqli_query($mysqli,$sql);
 
-						if (!empty($temat) || !empty($tresc) || !empty($sposob)) 
-						{ 
-							
-							$query = "INSERT INTO kursy (temat, tresc, sposob)	VALUES ('$temat', '$tresc', '$sposob')";
-							$result = mysqli_query($connection, $query);
+		if(mysqli_num_rows($result) == 0)
+		{
 
-							 echo "Lekcja została pomyślnie dodany!";
-						}
-						else echo "Nie wpisałeś tematu lub treści lekcji lub sposobu nauczania!";
+				if (!empty($temat) || !empty($tresc) || !empty($sposob)) 
+				{ 
+					
+					$query = "INSERT INTO kursy (temat, tresc, sposob)	VALUES ('$temat', '$tresc', '$sposob')";
+					$result = mysqli_query($mysqli, $query);
+
+					 echo "Lekcja została pomyślnie dodany!";
 				}
-				  else echo " Podany temat jest zajęty. ";
-				}
-				?>
-				
-				<?php
+				else echo "Nie wpisałeś tematu lub treści lekcji lub sposobu nauczania!";
+		}
+		  else echo " Podany temat jest zajęty. ";
+		}
+
 	if($_SESSION['zalogowani']==true)
 	{
-		require_once "laczenie.php";
-		$conn = new mysqli($servername, $username, $password,$dbname);
-		$conn ->query("SET NAMES 'utf8'");
-
-		if ($conn->connect_error) 
-		{
-			die("Błąd połączenia z bazą danych: " . $conn->connect_error);
-		}
-		
+				
 		//obliczanie danych na potrzeby stronicowania
 		$cur_page = isset($_GET['page']) ? $_GET['page'] : 1;
 		$results_per_page = 10; //Liczba wyników na stronę
 		$skip = (($cur_page - 1) * $results_per_page); //liczba pomijanych wierszy na potrzeby stronicowania
 		
 		$query = "SELECT id_kursu, temat, sposob, data_dodania FROM kursy ORDER BY id_kursu";
-		$data = mysqli_query($conn, $query); //pobieramy wszystkie wiersze
+		$data = mysqli_query($mysqli, $query); //pobieramy wszystkie wiersze
 		
 		$total = mysqli_num_rows($data); //liczba wierszy zapisana na potrzeby stronicowania
 		$num_pages = ceil($total / $results_per_page); //określenie liczby stron
 		$query .=  " LIMIT $skip, $results_per_page"; //dopisujemy do wcześniejszego zapytania, klauzule LIMIT
 		
 		//wykonanie kwerendy
-		$result = mysqli_query($conn, $query);
+		$result = mysqli_query($mysqli, $query);
 
 		
 		if ($result->num_rows > 0) 

@@ -89,17 +89,10 @@ session_start();
 	if($_SESSION['zalogowani']==true)
 	{
 		require_once "laczenie.php";
-		$conn = new mysqli($servername, $username, $password,$dbname);
-		$conn ->query("SET NAMES 'utf8'");
-
-		if ($conn->connect_error) 
-		{
-			die("Błąd połączenia z bazą danych: " . $conn->connect_error);
-		}
-		
+	
 				
 		$query1 = "SELECT tresc FROM kursy WHERE id_kursu = 3";
-		$result1 = mysqli_query($conn, $query1);
+		$result1 = mysqli_query($mysqli, $query1);
 		if ($result1->num_rows > 0) 
 		{
 			echo '<div class="thumbnails">';
@@ -347,17 +340,17 @@ session_start();
 		$skip = (($cur_page - 1) * $results_per_page); //liczba pomijanych wierszy na potrzeby stronicowania
 		
 		$query = "SELECT * FROM komentarze WHERE id_kursu = 3 AND zatwierdzony = 1 ORDER BY id_komentarza";
-		$data = mysqli_query($conn, $query); //pobieramy wszystkie wiersze
+		$data = mysqli_query($mysqli, $query); //pobieramy wszystkie wiersze
 			
 		$total = mysqli_num_rows($data); //liczba wierszy zapisana na potrzeby stronicowania
 		$num_pages = ceil($total / $results_per_page); //określenie liczby stron
 		$query .=  " LIMIT $skip, $results_per_page"; //dopisujemy do wcześniejszego zapytania, klauzule LIMIT
 		
 		//wykonanie kwerendy
-		$result = mysqli_query($conn, $query);
+		$result = mysqli_query($mysqli, $query);
 		
 		$sql2  = "SELECT ocena FROM oceny WHERE id_kursu = 3";
-		$result2 = $conn->query($sql2);
+		$result2 = $mysqli->query($sql2);
 		$row2 = $result2->fetch_assoc();
 		
 		
@@ -560,7 +553,7 @@ $sql1 = "SELECT tresc FROM kursy WHERE id_kursu = 3";
 
 
 
-    $result = $conn->query($sql1);
+    $result = $mysqli->query($sql1);
 
 
     $details = $result->fetch_array();
@@ -572,7 +565,7 @@ $sql1 = "SELECT tresc FROM kursy WHERE id_kursu = 3";
 
 
 
-$result1 = $conn->query($sql1);
+$result1 = $mysqli->query($sql1);
 
 
 echo'
@@ -605,51 +598,32 @@ echo'
       })
     </script>
 	<?php
-echo'
-<h3>Edytuj lekcję:</h3>
+		echo'
+		<h3>Edytuj lekcję:</h3>
 
-<form name="edycja_lekcji" method="post" action="kurs3.php">
-       <table>
- <td><textarea rows="10" cols="50" name="zapisanatresc" > '; echo $zapisanatresc; echo' </textarea></td>
-        
-    
-        </table>
+		<form name="edycja_lekcji" method="post" action="kurs3.php">
+			   <table>
+		 <td><textarea rows="10" cols="50" name="zapisanatresc" > '; echo $zapisanatresc; echo' </textarea></td>
+				
+			
+				</table>
 
 
-<br/>
+		<br/>
 
-<form name="edycja_lekcji" method="post" action="kurs3.php">
+		<form name="edycja_lekcji" method="post" action="kurs3.php">
 	
 			<input value="Edycja lekcji" type="submit" name="edycja_lekcji">
 			</form>';
 
-					
-					
-
-				$connection = mysqli_connect('mysql.cba.pl', '', '');
-				if (!$connection){
-					die("Polaczenie przerwanie" . mysqli_error($connection));
-				}
-				$select_db = mysqli_select_db($connection, '');
-				if (!$select_db){
-					die("Blad polaczenia" . mysqli_error($connection));
-				}
-				
-		        mysqli_query("SET NAMES 'utf8'");
-                mysqli_query("SET CHARACTER_SET_CLIENT=utf8");
-                mysqli_query("SET CHARACTER_SET_RESULTS=utf8");
-                mysqli_set_charset($connection, "utf8");
 
 				if (isset($_POST['edycja_lekcji']))
 				{
 
 					$zapisanatresc = $_POST['zapisanatresc'];
 					
-
-	
-							
 							$query = "UPDATE kursy SET tresc = '$zapisanatresc' where id_kursu =3";
-							$result = mysqli_query($connection, $query);
+							$result = mysqli_query($mysqli, $query);
 
 		
 				}

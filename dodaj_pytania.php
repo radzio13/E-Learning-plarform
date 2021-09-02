@@ -174,13 +174,7 @@ $next=$total+1;
 	if($_SESSION['zalogowani']==true)
 	{
 		require_once "laczenie.php";
-		$conn = new mysqli($servername, $username, $password,$dbname);
-		$conn ->query("SET NAMES 'utf8'");
 
-		if ($conn->connect_error) 
-		{
-			die("Błąd połączenia z bazą danych: " . $conn->connect_error);
-		}
 		
 		//obliczanie danych na potrzeby stronicowania
 		$cur_page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -188,14 +182,14 @@ $next=$total+1;
 		$skip = (($cur_page - 1) * $results_per_page); //liczba pomijanych wierszy na potrzeby stronicowania
 		
 		$query = "SELECT question_number, question FROM questions ORDER BY question_number";
-		$data = mysqli_query($conn, $query); //pobieramy wszystkie wiersze
+		$data = mysqli_query($mysqli, $query); //pobieramy wszystkie wiersze
 		
 		$total = mysqli_num_rows($data); //liczba wierszy zapisana na potrzeby stronicowania
 		$num_pages = ceil($total / $results_per_page); //określenie liczby stron
 		$query .=  " LIMIT $skip, $results_per_page"; //dopisujemy do wcześniejszego zapytania, klauzule LIMIT
 		
 		//wykonanie kwerendy
-		$result = mysqli_query($conn, $query);
+		$result = mysqli_query($mysqli, $query);
 
 		
 		if ($result->num_rows > 0) 

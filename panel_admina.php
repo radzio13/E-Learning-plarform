@@ -45,7 +45,7 @@ session_start();
 									header('Location:index.html');
 									die();
 								}	
-								?>
+				?>
                     <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="kategorie.php">Strona główna</a></li>
 					<li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="wyloguj.php">Wyloguj</a></li>
                     </ul>

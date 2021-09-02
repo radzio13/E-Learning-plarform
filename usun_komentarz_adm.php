@@ -6,13 +6,6 @@ session_start();
 	if($_SESSION['zalogowani']==true)
 	{
 		require_once "laczenie.php";
-		$conn = new mysqli($servername, $username, $password,$dbname);
-		$conn ->query("SET NAMES 'utf8'");
-
-		if ($conn->connect_error) 
-		{
-			die("Błąd połączenia z bazą danych: " . $conn->connect_error);
-		}
 		
 		$Id_komentarz_usun=$_POST['Id_komentarz_usun'];
 		$Login_komentarz_usun=$_POST['Login_komentarz_usun'];
@@ -27,13 +20,13 @@ session_start();
 		{
 			$sql2 = "SELECT * FROM komentarze WHERE id_komentarza='$Id_komentarz_usun' AND login='$Login_komentarz_usun'";
 			
-			if($rezultat_komentarz = @$conn->query($sql2))
+			if($rezultat_komentarz = @$mysqli->query($sql2))
 			{
 				$ile_komentarzy=$rezultat_komentarz->num_rows;
 				if($ile_komentarzy>0)
 				{
 					$sql = "DELETE FROM komentarze WHERE id_komentarza='$Id_komentarz_usun' AND login='$Login_komentarz_usun'";
-					if ($conn->query($sql) === TRUE) 
+					if ($mysqli->query($sql) === TRUE) 
 					{
 						$rezultat_komentarz->free_result();
 						$_SESSION['usunieto_komentarz']='<span style="color:white">Pomyślnie usunięto komentarz!</span>';
@@ -50,7 +43,7 @@ session_start();
 				
 			}
 		}
-		$conn->close();
+		$mysqli->close();
 
 	}
 	else

@@ -43,7 +43,7 @@ session_start();
 									header('Location:index.html');
 									die();
 								}	
-								?>
+				?>
                     <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="kategorie.php">Strona główna</a></li>
 					<li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="wyloguj.php">Wyloguj</a></li>
                     </ul>
@@ -73,16 +73,9 @@ session_start();
 							Podaj jeszcze raz hasło:<br><input type="password" name= "haslo2"/><br><br>
 							<center><input type="submit" value="Zmień hasło" name="zmiana_hasla"></center>
 						</form><br>
-						<?php
+			<?php
 		
-				$connection = mysqli_connect('mysql.cba.pl', '', '');
-				if (!$connection){
-					die("Polaczenie przerwanie" . mysqli_error($connection));
-				}
-				$select_db = mysqli_select_db($connection, 'zdalnykurs');
-				if (!$select_db){
-					die("Blad polaczenia" . mysqli_error($connection));
-				}
+				require_once "laczenie.php";
 								
 
 				if (isset($_POST['zmiana_hasla']))
@@ -93,7 +86,7 @@ session_start();
 
 
 
-				    $rezultat = mysqli_query($connection, "SELECT * from uzytkownicy WHERE id_uzytkownika='" . $_SESSION["id_uzytkownika"] . "'");
+				    $rezultat = mysqli_query($mysqli, "SELECT * from uzytkownicy WHERE id_uzytkownika='" . $_SESSION["id_uzytkownika"] . "'");
 					$wiersz = mysqli_fetch_array($rezultat);
 					if ($haslo_akt == $wiersz["haslo"]) 
 					{
@@ -109,7 +102,7 @@ session_start();
 							}
 							else
 							{
-								mysqli_query($connection, "UPDATE uzytkownicy set haslo='" . $haslo1 . "' WHERE id_uzytkownika='" . $_SESSION["id_uzytkownika"] . "'");
+								mysqli_query($mysqli, "UPDATE uzytkownicy set haslo='" . $haslo1 . "' WHERE id_uzytkownika='" . $_SESSION["id_uzytkownika"] . "'");
 								echo'Twoje hasło zostało pomyślnie zmienione!</span>';
 							}
 						}
@@ -121,7 +114,7 @@ session_start();
 					}
 				}
 				?>
-						<br><br><br><center><a href="kategorie.php" class="button style3 fit" data-poptrox="youtube,300x400">POWRÓT</a></center>
+				<br><br><br><center><a href="kategorie.php" class="button style3 fit" data-poptrox="youtube,300x400">POWRÓT</a></center>
 				
 		</div>
     </section>

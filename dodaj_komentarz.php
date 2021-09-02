@@ -6,13 +6,6 @@ session_start();
 	if($_SESSION['zalogowani']==true)
 	{
 		require_once "laczenie.php";
-		$conn = new mysqli($servername, $username, $password,$dbname);
-		$conn ->query("SET NAMES 'utf8'");
-
-		if ($conn->connect_error) 
-		{
-			die("Błąd połączenia z bazą danych: " . $conn->connect_error);
-		}
 		
 		$Tresc=$_POST['Tresc'];
 		$Login=$_SESSION['login'];
@@ -28,12 +21,12 @@ session_start();
 		{
 			$sql = "INSERT INTO komentarze(id_kursu, login, tresc_kom, ocena) VALUES (1, '$Login', '$Tresc', '$ocena')";
 			
-			if ($conn->query($sql) === TRUE) 
+			if ($mysqli->query($sql) === TRUE) 
 			{
 				$_SESSION['dodano_komentarz']='<span style="color:white">Pomyślnie dodano komentarz!</span>'; 
 				header('Location:kurs1.php#dodaj_kom');
 				$sql2 = "UPDATE oceny SET ocena = (SELECT avg(ocena) FROM komentarze) WHERE id_kursu=1";
-				$result = $conn->query($sql2);
+				$result = $mysqli->query($sql2);
 			} 
 			else 
 			{
@@ -42,7 +35,7 @@ session_start();
 			}
 			
 		}
-		$conn->close();
+		$mysqli->close();
 
 	}
 	else

@@ -81,55 +81,38 @@ session_start();
 						</form>
 						
 					
-					<?php
+	<?php
+
+		require_once "laczenie.php";
 		
-				$connection = mysqli_connect('mysql.cba.pl', '', '');
-				if (!$connection){
-					die("Polaczenie przerwanie" . mysqli_error($connection));
+
+		if (isset($_POST['dodaj_kategorie']))
+		{
+			$temat = $_POST['temat'];
+
+
+		$sql = "SELECT temat FROM kategorie WHERE temat='$temat'";
+		$result = mysqli_query($mysqli,$sql);
+
+		if(mysqli_num_rows($result) == 0)
+		{
+
+				if (!empty($temat)) 
+				{ 
+					
+					$query = "INSERT INTO kategorie (temat)	VALUES ('$temat')";
+					$result = mysqli_query($mysqli, $query);
+
+					 echo "Kategoria została pomyślnie dodana!";
 				}
-				$select_db = mysqli_select_db($connection, '');
-				if (!$select_db){
-					die("Blad polaczenia" . mysqli_error($connection));
-				}
-				
-				
+				else echo "Nie wpisałeś nazwy kategorii!";
+		}
+		  else echo " Podana kategoria jest zajęta. ";
+		}
 
-				if (isset($_POST['dodaj_kategorie']))
-				{
-					$temat = $_POST['temat'];
-
-	
-				$sql = "SELECT temat FROM kategorie WHERE temat='$temat'";
-				$result = mysqli_query($connection,$sql);
-
-				if(mysqli_num_rows($result) == 0)
-				{
-
-						if (!empty($temat)) 
-						{ 
-							
-							$query = "INSERT INTO kategorie (temat)	VALUES ('$temat')";
-							$result = mysqli_query($connection, $query);
-
-							 echo "Kategoria została pomyślnie dodana!";
-						}
-						else echo "Nie wpisałeś nazwy kategorii!";
-				}
-				  else echo " Podana kategoria jest zajęta. ";
-				}
-				?>
-				
-				<?php
 	if($_SESSION['zalogowani']==true)
 	{
-		require_once "laczenie.php";
-		$conn = new mysqli($servername, $username, $password,$dbname);
-		$conn ->query("SET NAMES 'utf8'");
 
-		if ($conn->connect_error) 
-		{
-			die("Błąd połączenia z bazą danych: " . $conn->connect_error);
-		}
 		
 		//obliczanie danych na potrzeby stronicowania
 		$cur_page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -137,14 +120,14 @@ session_start();
 		$skip = (($cur_page - 1) * $results_per_page); //liczba pomijanych wierszy na potrzeby stronicowania
 		
 		$query = "SELECT id_kategorii, temat, data_dodania FROM kategorie ORDER BY id_kategorii";
-		$data = mysqli_query($conn, $query); //pobieramy wszystkie wiersze
+		$data = mysqli_query($mysqli, $query); //pobieramy wszystkie wiersze
 		
 		$total = mysqli_num_rows($data); //liczba wierszy zapisana na potrzeby stronicowania
 		$num_pages = ceil($total / $results_per_page); //określenie liczby stron
 		$query .=  " LIMIT $skip, $results_per_page"; //dopisujemy do wcześniejszego zapytania, klauzule LIMIT
 		
 		//wykonanie kwerendy
-		$result = mysqli_query($conn, $query);
+		$result = mysqli_query($mysqli, $query);
 
 		
 		if ($result->num_rows > 0) 
@@ -247,9 +230,9 @@ session_start();
 
 
 
-<hr>
-<br>
-</div>  
+	<hr>
+	<br>
+	</div>  
 
     <section id="contact">
 	

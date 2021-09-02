@@ -71,17 +71,10 @@ session_start();
 	<div id="main">
 					
 
-			<?php
+	<?php
 	if($_SESSION['zalogowani']==true && $_SESSION['stanowisko']=='Admin' || $_SESSION['stanowisko']=='Moderator')
 	{
 		require_once "laczenie.php";
-		$conn = new mysqli($servername, $username, $password,$dbname);
-		$conn ->query("SET NAMES 'utf8'");
-
-		if ($conn->connect_error) 
-		{
-			die("Błąd połączenia z bazą danych: " . $conn->connect_error);
-		}
 		
 		function generate_page_links($cur_page, $num_pages) {
 			 $page_links = '';
@@ -146,17 +139,17 @@ session_start();
 		$skip = (($cur_page - 1) * $results_per_page); //liczba pomijanych wierszy na potrzeby stronicowania
 
 		//$sql  = "SELECT * FROM komentarze ORDER BY id_komentarza DESC";
-		//$result = $conn->query($sql);
+		//$result = $mysqli->query($sql);
 
 		$query = "SELECT * FROM komentarze WHERE zatwierdzony = 0 ORDER BY id_komentarza DESC";
-		$data = mysqli_query($conn, $query); //pobieramy wszystkie wiersze
+		$data = mysqli_query($mysqli, $query); //pobieramy wszystkie wiersze
 		
 		$total = mysqli_num_rows($data); //liczba wierszy zapisana na potrzeby stronicowania
 		$num_pages = ceil($total / $results_per_page); //określenie liczby stron
 		$query .=  " LIMIT $skip, $results_per_page"; //dopisujemy do wcześniejszego zapytania, klauzule LIMIT
 
 		//wykonanie kwerendy
-		$result = mysqli_query($conn, $query);
+		$result = mysqli_query($mysqli, $query);
 		
 		if ($result->num_rows > 0) 
 		{
@@ -243,17 +236,17 @@ session_start();
 		echo"<h2><center>Nie masz wystarczających uprawnień!!</center></h2>";
 	}
 	
-		?>
-						<a href="panel_admina.php#main" class="button style3 fit" data-poptrox="youtube,300x400">Powrót do panelu admina</a>
+	?>
+		<a href="panel_admina.php#main" class="button style3 fit" data-poptrox="youtube,300x400">Powrót do panelu admina</a>
 				
 		</div>
 	
 
 
 
-<hr>
-<br>
-</div>  
+	<hr>
+	<br>
+	</div>  
 
     <section id="contact">
 	

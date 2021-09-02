@@ -3,11 +3,11 @@ session_start();
 
 require_once "laczenie.php";
 
-$conn=@new mysqli($servername, $username, $password,$dbname);
+$mysqli=@new mysqli($servername, $username, $password,$dbname);
 
-if($conn->connect_errno!=0)
+if($mysqli->mysqliect_errno!=0)
 {
-	echo"Blad:".$conn->connect_errno."Opis:".$conn->connect_error;
+	echo"Blad:".$mysqli->mysqliect_errno."Opis:".$mysqli->mysqliect_error;
 }
 else
 { 
@@ -15,7 +15,7 @@ else
 	$Haslo=$_POST['Haslo'];
 	$sql = "SELECT * FROM uzytkownicy WHERE login='$Login' AND haslo='$Haslo'";
 	
-	if($rezultat = @$conn->query($sql))
+	if($rezultat = @$mysqli->query($sql))
 	{
 		$ilu_uzytkownikow=$rezultat->num_rows;
 		if($ilu_uzytkownikow>0)
@@ -31,8 +31,8 @@ else
 			unset($_SESSION['blad']);
 			$rezultat->free_result();
 			$login = $_SESSION['login'];
-			$styl_uczenia = $conn->query("SELECT sposob_uczenia FROM uzytkownicy WHERE login = '$Login' AND sposob_uczenia = 'brak'");
-			$styl_uczenia2 = mysqli_query($conn, $styl_uczenia);
+			$styl_uczenia = $mysqli->query("SELECT sposob_uczenia FROM uzytkownicy WHERE login = '$Login' AND sposob_uczenia = 'brak'");
+			//$styl_uczenia2 = mysqli_query($mysqli, $styl_uczenia);
 			
 			if($styl_uczenia -> num_rows == 0)
 			{
@@ -54,6 +54,6 @@ else
 			die();
 		}
 	}
-	$conn->close();
+	$mysqli->close();
 }
 ?>

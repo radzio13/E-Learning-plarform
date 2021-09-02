@@ -86,15 +86,7 @@ session_start();
 					
 					<?php
 		
-				$connection = mysqli_connect('mysql.cba.pl', '', '');
-				if (!$connection){
-					die("Polaczenie przerwanie" . mysqli_error($connection));
-				}
-				$select_db = mysqli_select_db($connection, '');
-				if (!$select_db){
-					die("Blad polaczenia" . mysqli_error($connection));
-				}
-				
+				require_once "laczenie.php";
 				
 
 				if (isset($_POST['przyznaj_adm']))
@@ -105,7 +97,7 @@ session_start();
 
 	
 				$sql = "SELECT login FROM uzytkownicy WHERE login='$login' AND id_uzytkownika='$id_uzytkownika'";
-				$result = mysqli_query($connection,$sql);
+				$result = mysqli_query($mysqli,$sql);
 
 				if(mysqli_num_rows($result) != 0)
 				{
@@ -114,7 +106,7 @@ session_start();
 						{ 
 							
 							$query = "UPDATE uzytkownicy SET stanowisko ='$stanowisko' WHERE login='$login' AND id_uzytkownika='$id_uzytkownika'";
-							$result = mysqli_query($connection, $query);
+							$result = mysqli_query($mysqli, $query);
 
 							echo "Uprawnienia zostały zmienione!";
 						}
@@ -122,19 +114,10 @@ session_start();
 				}
 				  else echo " Podane konto nie istnieje! ";
 				}
-				?>
-				
-				<?php
+
 	if($_SESSION['zalogowani']==true)
 	{
-		require_once "laczenie.php";
-		$conn = new mysqli($servername, $username, $password,$dbname);
-		$conn ->query("SET NAMES 'utf8'");
 
-		if ($conn->connect_error) 
-		{
-			die("Błąd połączenia z bazą danych: " . $conn->connect_error);
-		}
 
 		//obliczanie danych na potrzeby stronicowania
 		$cur_page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -142,14 +125,14 @@ session_start();
 		$skip = (($cur_page - 1) * $results_per_page); //liczba pomijanych wierszy na potrzeby stronicowania
 		
 		$query = "SELECT * FROM uzytkownicy ORDER BY id_uzytkownika";
-		$data = mysqli_query($conn, $query); //pobieramy wszystkie wiersze
+		$data = mysqli_query($mysqli, $query); //pobieramy wszystkie wiersze
 		
 		$total = mysqli_num_rows($data); //liczba wierszy zapisana na potrzeby stronicowania
 		$num_pages = ceil($total / $results_per_page); //określenie liczby stron
 		$query .=  " LIMIT $skip, $results_per_page"; //dopisujemy do wcześniejszego zapytania, klauzule LIMIT
 		
 		//wykonanie kwerendy
-		$result = mysqli_query($conn, $query);
+		$result = mysqli_query($mysqli, $query);
 
 		if ($result->num_rows > 0) 
 		{

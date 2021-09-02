@@ -53,18 +53,10 @@
 							Podaj e-mail:<br><input type="text" name= "email"/><br><br>
 							<center><input type="submit" value="Utwórz konto" name="rejestruj"></center>
 						</form><br>
-						<?php
+			<?php
 		
-				$connection = mysqli_connect('mysql.cba.pl', '', '');
-				if (!$connection){
-					die("Polaczenie przerwanie" . mysqli_error($connection));
-				}
-				$select_db = mysqli_select_db($connection, '');
-				if (!$select_db){
-					die("Blad polaczenia" . mysqli_error($connection));
-				}
-				
-				
+				require_once "laczenie.php";
+								
 
 				if (isset($_POST['rejestruj']))
 				{
@@ -78,22 +70,22 @@
 
 	
 					$sql = "SELECT login FROM uzytkownicy WHERE login='$login'";
-					$result = mysqli_query($connection,$sql);
+					$result = mysqli_query($mysqli,$sql);
 
 					if(mysqli_num_rows($result) == 0)
-{
+					{
 
 					if ($haslo1 == $haslo2 && !empty($haslo1)) // sprawdzamy czy hasła takie same
 					{ 
 						
 						$query = "INSERT INTO uzytkownicy (login, haslo, email)
 						VALUES ('$login', '$haslo1', '$email')";
-					$result = mysqli_query($connection, $query);
+						$result = mysqli_query($mysqli, $query);
 
-												 echo "Konto zostało utworzone!";
-							}
-							else echo "Hasła nie są takie same!";
-						}
+						 echo "Konto zostało utworzone!";
+					}
+					else echo "Hasła nie są takie same!";
+					}
 					  else echo " Podany login jest zajęty! ";
 }
 				?>
